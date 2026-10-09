@@ -7,7 +7,7 @@ import AppKit
 
 @MainActor
 final class FeedbackPanelController {
-    private let panel: CyclePanel
+    private(set) var panel: CyclePanel
     private let iconView = NSImageView()
     private let messageLabel = NSTextField(labelWithString: "")
     private var hideTask: Task<Void, Never>?
@@ -20,7 +20,10 @@ final class FeedbackPanelController {
     private let contentSpacing: CGFloat = 12
 
     init() {
-        panel = CyclePanel(contentRect: NSRect(x: 0, y: 0, width: 220, height: 64))
+        panel = CyclePanel(
+            contentRect: NSRect(x: 0, y: 0, width: 220, height: 64),
+            acceptsKeyboardFocus: false
+        )
         panel.hidesOnDeactivate = false
         panel.ignoresMouseEvents = true
 
@@ -30,6 +33,7 @@ final class FeedbackPanelController {
         messageLabel.font = .systemFont(ofSize: 15, weight: .semibold)
         messageLabel.textColor = .white
         messageLabel.lineBreakMode = .byTruncatingTail
+        messageLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         let contentStack = NSStackView(views: [iconView, messageLabel])
         contentStack.translatesAutoresizingMaskIntoConstraints = false
